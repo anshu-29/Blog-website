@@ -1,8 +1,7 @@
-//jshint esversion:6
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const mongoose = require("mongoose")
 const _ = require('lodash');
 
 const homeStartingContent = "Welcome to my blog Website. Here you can put your thoughts and See them being published on the website";
@@ -19,60 +18,76 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-let posts = [];
+ mongoose.connect("mongodb://127.0.0.1:27017/blogDB",{useNewUrlParser:true})
+const postSchema = {
+    title: String,
+    content:String
+}
+const Post = mongoose.model("Post",postSchema)
 
-app.get("/",function (req,res) {
-  res.render("home", {startContent: homeStartingContent ,
-  posts: posts
-  });
 
 
-})
+
+
+app.get("/", async function (req, res) {
+    try {
+        const posts = await Post.find({});
+        res.render("home", {
+            startContent: homeStartingContent,
+            posts: posts
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
+
 
 app.get("/about",function (req,res) {
-  res.render("about",{aboutMe: aboutContent});
+    res.render("about",{aboutMe: aboutContent});
 
 })
 app.get("/contact",function (req,res) {
-  res.render("contact",{contactMe: aboutContent});
+    res.render("contact",{contactMe: contactContent});
 
 })
 
 app.get("/compose",function (req, res) {
-  res.render("compose")
+    res.render("compose")
 
 })
 
 
 
 app.post("/compose",function (req,res) {
-   const post = {
-title : req.body.composeInput,
-content : req.body.composeBox,
-  };
-posts.push(post)
-   res.redirect("/")
-
-})
 
 
-app.get("/posts/:postName",function (req,res) {
-
-    const requestedTitle = _.lowerCase(req.params.postName) ;
-
-  posts.forEach(function (post) {
-      const storedTitle = _.lowerCase(post.title) ;
-
-
-      if (storedTitle === requestedTitle){
-          res.render("post", {
-              postedTitle : storedTitle ,
-          postContent : post.content })
-      }
-  });
+    const post = new Post ({
+        title : req.body.composeInput,
+        content : req.body.composeBox,
+    });
+post.save().then(r=>{
+    res.redirect("/");
+});
 
 
-})
+});
+
+
+app.get("/posts/:postId", async function (req, res) {
+    const requestedId = req.params.postId;
+
+    try {
+        const post = await Post.find({ _id: requestedId });
+        res.render("post", {
+            postedTitle: post[0].title,
+            postContent: post[0].content
+        });
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+
 
 
 
@@ -80,5 +95,5 @@ app.get("/posts/:postName",function (req,res) {
 
 
 app.listen(3000, function() {
-  console.log("Server started on port 3000");
+    console.log("Server started on port 3000");
 });
