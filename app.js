@@ -86,14 +86,6 @@ app.get("/posts/:postId", async function (req, res) {
         console.log(err);
     }
 });
-
-
-
-
-
-
-
-
 app.listen(3000, function() {
     console.log("Server started on port 3000");
 });
