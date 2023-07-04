@@ -1,6 +1,27 @@
 <%- include("partials/header") -%>
 <h1><%= postedTitle %></h1>
+<% if (imageData) { %>
+    <img class = "post-image"src="data:image/jpeg;base64, <%= imageData.toString('base64') %>" alt="Image">
+<% } %>
 
+<% if (videoData) { %>
+    <video controls>
+        <source class = " post-video" src="data:video/mp4;base64, <%= videoData.toString('base64') %>" type="video/mp4">
+    </video>
+<% } %>
+
+<% if (audioData) { %>
+    <audio controls>
+        <source src="data:audio/mpeg;base64, <%= audioData.toString('base64') %>" type="audio/mpeg">
+    </audio>
+<% } %>
 <p> <%= postContent %> </p>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const image = document.querySelector('.post-image');
+        image.addEventListener('click', function() {
+            image.classList.toggle('enlarged');
+        });
+    });
+</script>
 <%- include("partials/footer") -%>

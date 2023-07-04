@@ -5,17 +5,25 @@
 <% console.log(posts)%>
 <% posts.forEach(function(post) { %>
     <h1> <%= post.title %> </h1>
+    <% if (post.imageData) { %>
+        <img class = "post-image"src="data:image/jpeg;base64, <%= post.imageData.toString('base64') %>">
+    <% } %>
+    <% if (post.videoData) { %>
+        <video controls>
+            <source class="post-video" src="data:video/mp4;base64, <%= post.videoData.toString('base64') %>" type="video/mp4">
+        </video>
+    <% } %>
+    <% if (post.audioData) { %>
+        <audio controls>
+            <source src="data:audio/mpeg;base64, <%= post.audioData.toString('base64') %>" type="audio/mpeg">
+        </audio>
+    <% } %>
+    <p id="postString"> <%= post.content.substring(0,50) + "..." %>
+        <a href="/posts/<%= post._id %>">Read More</a>
+    </p>
+<% }) %>
 
 
-
-
-
-<p id="postString"> <%= post.content.substring(0,50) + "..." %>
-    <a href="/posts/<%= post._id %>">Read More</a>
-</p>
-
-
-<% })%>
 
 
 
