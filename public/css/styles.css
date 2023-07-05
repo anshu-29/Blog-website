@@ -45,13 +45,16 @@
     height: 50%;
     width: 50%;
     cursor: pointer;
+    padding: 2px 0 2px 0;
 }
 .post-video{
+    padding: 2px 0 2px 0;
     height: 50%;
     width: 50%;
     cursor: pointer;
 }
 .post-image.enlarged {
+    padding: 2px 0 2px 0;
     width: auto;
     height: auto;
     max-width: 100%;
@@ -59,4 +62,5 @@
 }
 p{
     font-size: 2rem;
+    padding: 2px 0 2px 0;
 }
